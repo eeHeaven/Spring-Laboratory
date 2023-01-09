@@ -1,2 +1,3 @@
 rootProject.name = 'spring-laboratory'
 include 'toby-spring'
+include 'database'
