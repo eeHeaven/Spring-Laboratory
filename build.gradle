@@ -26,6 +26,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.hsqldb:hsqldb:2.3.4'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
