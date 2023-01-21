@@ -8,8 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+import org.springframework.jdbc.support.SQLExceptionTranslator;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -25,10 +28,12 @@ public class ExTranslatorV1Test {
     Repository repository;
     Service service;
 
+
     @BeforeEach
     void init(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource(URL,USERNAME,PASSWORD);
-        repository = new Repository(dataSource);
+        SQLExceptionTranslator exTranslator = new SQLErrorCodeSQLExceptionTranslator(dataSource);
+        repository = new Repository(dataSource,exTranslator);
         service = new Service(repository);
     }
 
@@ -47,7 +52,7 @@ public class ExTranslatorV1Test {
             try{
                 repository.save(new Member(memberId, 1000));
                 log.info("savedId={}",memberId);
-            }catch(MyDuplicateKeyException e){
+            }catch(DuplicateKeyException e){
                 log.info("키 중복, 복구 시도");
                 String retryId = generateNewId(memberId);
                 log.info("retry Id={}",retryId);
@@ -64,6 +69,7 @@ public class ExTranslatorV1Test {
     @RequiredArgsConstructor
     static class Repository{
         private final DataSource dataSource;
+        private final SQLExceptionTranslator exTranslator;
 
         public Member save(Member member) {
             String sql = "insert into member(member_id, money) values(?,?)";
@@ -79,11 +85,12 @@ public class ExTranslatorV1Test {
                 return member;
 
             }catch(SQLException e){
+                throw exTranslator.translate("test",sql,e);
                 // h2 db
-                if(e.getErrorCode() ==23505){//h2 pk 중복 에러코드
-                    throw new MyDuplicateKeyException("중복 멤버입니다",e);
-                }
-                throw new MyDBException("db 커넥션 예외",e);
+//                if(e.getErrorCode() ==23505){//h2 pk 중복 에러코드
+//                    throw new MyDuplicateKeyException("중복 멤버입니다",e);
+//                }
+//                throw new MyDBException("db 커넥션 예외",e);
 
             }finally{
                JdbcUtils.closeStatement(pstmt);
