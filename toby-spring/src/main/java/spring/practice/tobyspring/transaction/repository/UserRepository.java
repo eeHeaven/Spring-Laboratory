@@ -11,4 +11,7 @@ public class UserRepository {
         List<User> list = new ArrayList<>();
         return list;
     }
+    public void upgrade(User user){
+        return;
+    }
 }

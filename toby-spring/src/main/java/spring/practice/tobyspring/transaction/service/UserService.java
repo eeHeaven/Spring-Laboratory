@@ -17,6 +17,7 @@ public class UserService {
             if(levelPolicy.canUpgrade(user)){
                 Level next = user.getLevel().getNext();
                 user.setLevel(next);
+                repository.upgrade(user);
             }
         }
     }
