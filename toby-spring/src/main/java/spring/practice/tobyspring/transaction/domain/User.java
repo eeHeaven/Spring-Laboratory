@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User {
+    String id;
     Level level;
     int point;
 }

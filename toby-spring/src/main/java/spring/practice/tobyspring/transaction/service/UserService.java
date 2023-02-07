@@ -14,11 +14,14 @@ public class UserService {
     public void upgradeLevels() throws Exception {
         List<User> users = repository.getAll();
         for(User user: users){
-            if(levelPolicy.canUpgrade(user)){
-                Level next = user.getLevel().getNext();
-                user.setLevel(next);
-                repository.upgrade(user);
-            }
+          upgradeLevel(user);
+        }
+    }
+    public void upgradeLevel(User user) {
+        if(levelPolicy.canUpgrade(user)){
+            Level next = user.getLevel().getNext();
+            user.setLevel(next);
+            repository.upgrade(user);
         }
     }
 
