@@ -9,20 +9,16 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository repository = new UserRepository();
+    private final UpgradeLevelPolicy levelPolicy = new NormalUpgradeLevelPolicy();
 
     public void upgradeLevels() throws Exception {
         List<User> users = repository.getAll();
         for(User user: users){
-            if(canUpgrade(user)){
+            if(levelPolicy.canUpgrade(user)){
                 Level next = user.getLevel().getNext();
                 user.setLevel(next);
             }
         }
     }
-    private boolean canUpgrade(User user){
-        Integer upgradePolicy = user.getLevel().getUpgradePolicy();
-        if(upgradePolicy == null) return false;
-        if(user.getPoint()>=upgradePolicy) return true;
-        else return false;
-    }
+
 }
