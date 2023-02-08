@@ -23,7 +23,6 @@ public class ProxyFactoryBeanTest {
             pfBean.setTarget(new HelloTarget());
 
             NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
-            pointcut.setMappedName("get*");
 
             // proxyFactoryBean에 Advisor 생성해서 넣기
             pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UpperCaseAdvisor()));
