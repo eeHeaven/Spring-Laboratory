@@ -9,10 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import spring.aop.order.aop.AspectV1;
 import spring.aop.order.aop.AspectV2;
+import spring.aop.order.aop.AspectV3;
 
 @Slf4j
 @SpringBootTest
-@Import(AspectV2.class)
+@Import(AspectV3.class)
 public class AopTest {
 
     @Autowired
