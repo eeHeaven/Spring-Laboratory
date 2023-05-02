@@ -9,6 +9,7 @@ public class SampleService {
 
     private final SampleRepository sampleRepository;
 
+    @Trace
     public String save(String id){
         return sampleRepository.save(id);
     }
